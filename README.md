@@ -31,7 +31,7 @@ users can inspect its source.
 
 ## App preview
 
-![Manufacturing Maintenance Assistant web interface](https://raw.githubusercontent.com/HarshavardhanKakarla/Manufacturing-Maintenance-Assistant/03997dbdd9af62df7ac4db59bc0429657dbe38be/docs/screenshots/maintenance-assistant.png)
+![Manufacturing Maintenance Assistant web interface](https://raw.githubusercontent.com/HarshavardhanKakarla/Manufacturing-Maintenance-Assistant/60c307305888288b90f2545ed0d7da9bfaa22c2e/docs/screenshots/maintenance-assistant.png)
 
 The preview is loaded from an immutable GitHub commit URL. Its image file will
 be removed from the current branch after publishing, but will remain available
