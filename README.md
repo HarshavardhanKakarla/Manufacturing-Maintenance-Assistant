@@ -47,13 +47,16 @@ in Git history for this README.
    python -m pip install -r requirements.txt
    ```
 
-2. Edit the included `.env` file and replace the placeholder with your OpenAI API key:
+2. Create your local `.env` from the example:
 
-   ```text
-   OPENAI_API_KEY=your_openai_api_key_here
+   ```powershell
+   Copy-Item .env.example .env
    ```
 
-   The app loads `.env` from the project directory. It is ignored by Git; do not commit real credentials. Model names and Flask options can also be configured there.
+   Edit `.env` and replace `your_openai_api_key_here` with your OpenAI API key.
+   The app loads `.env` from the project directory. It is ignored by Git; never
+   commit real credentials. Model names and Flask options can also be configured
+   there.
 
 3. Start the app from the project directory:
 

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manufacturing Maintenance Assistant</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        color: #17212b;
+        background: #f3f6f8;
+      }
+      body {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      h1, h2 { color: #123047; }
+      .card {
+        background: white;
+        border: 1px solid #dce4e9;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 1rem 0;
+        box-shadow: 0 2px 8px #1230470a;
+      }
+      .warning {
+        border-left: 5px solid #d97706;
+        background: #fff7e8;
+        padding: 1rem;
+        border-radius: 6px;
+      }
+      .flash { padding: .8rem 1rem; border-radius: 6px; margin: .6rem 0; }
+      .error { background: #ffeded; color: #8d2020; }
+      .success { background: #eaf8ef; color: #176436; }
+      label { display: block; font-weight: 650; margin-bottom: .5rem; }
+      input[type="file"], input[type="text"] {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        margin: .5rem 0 1rem;
+        padding: .75rem;
+        border: 1px solid #aebdc8;
+        border-radius: 6px;
+        background: white;
+      }
+      button {
+        border: 0;
+        border-radius: 6px;
+        background: #075985;
+        color: white;
+        padding: .7rem 1rem;
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      button:disabled { background: #82919b; cursor: not-allowed; }
+      details { border-top: 1px solid #e1e7eb; padding: .8rem 0; }
+      summary { cursor: pointer; font-weight: 600; }
+      .answer { white-space: pre-wrap; line-height: 1.6; }
+      .muted { color: #526371; }
+      code { overflow-wrap: anywhere; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Manufacturing Maintenance Assistant</h1>
+      <p class="muted">
+        Ask questions about indexed equipment documents and inspect the passages
+        that support each answer.
+      </p>
+    </header>
+
+    <p class="warning">
+      <strong>Safety notice:</strong> Information support only. Follow site
+      procedures and the equipment manufacturer's instructions. Do not use this
+      assistant instead of a qualified technician or required lockout/tagout
+      procedures.
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}" role="status">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% if error %}
+      <div class="flash error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <section class="card">
+      <h2>1. Index documents</h2>
+      <p>
+        The fictional sample conveyor manual is always included. You may add
+        PDF, TXT, or Markdown documents (maximum combined upload: 16 MB).
+      </p>
+      <form action="{{ url_for('index_documents') }}" method="post" enctype="multipart/form-data">
+        <label for="documents">Additional manuals or maintenance logs</label>
+        <input id="documents" name="documents" type="file" accept=".pdf,.txt,.md" multiple>
+        <button type="submit">Index documents</button>
+      </form>
+      {% if index_ready %}
+        <p class="success">Documents are indexed for this browser session.</p>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h2>2. Ask a question</h2>
+      <form action="{{ url_for('ask') }}" method="post">
+        <label for="question">Question about the indexed documents</label>
+        <input
+          id="question"
+          name="question"
+          type="text"
+          placeholder="What checks are listed for conveyor motor overheating?"
+          value="{{ question or '' }}"
+          required
+        >
+        <button type="submit" {% if not index_ready %}disabled{% endif %}>Ask</button>
+      </form>
+      {% if not index_ready %}
+        <p class="muted">Index documents before asking a question.</p>
+      {% endif %}
+    </section>
+
+    {% if answer %}
+      <section class="card" aria-live="polite">
+        <h2>Answer</h2>
+        <p><strong>Question:</strong> {{ question }}</p>
+        <div class="answer">{{ answer }}</div>
+        {% if sources %}
+          <h3>Retrieved source passages</h3>
+          {% for source in sources %}
+            <details>
+              <summary>
+                [S{{ loop.index }}] {{ source.source }}
+                {% if source.page is not none %} — page {{ source.page }}{% endif %}
+              </summary>
+              <p class="muted">Retrieval similarity: {{ "%.3f"|format(source.score) }}</p>
+              <p>{{ source.text }}</p>
+            </details>
+          {% endfor %}
+        {% endif %}
+      </section>
+    {% endif %}
+  </body>
+</html>
