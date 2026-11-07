@@ -1,6 +1,6 @@
 # Manufacturing Maintenance Assistant
 
-A beginner-friendly RAG demo that answers questions from equipment manuals and maintenance notes. It retrieves passages using OpenAI embeddings, generates an answer constrained to those passages, and displays the passages with source references. A fictional conveyor manual is included so the app has sample content immediately.
+A RAG model that answers questions from equipment manuals and maintenance notes. It retrieves passages using OpenAI embeddings, generates an answer constrained to those passages, and displays the passages with source references. A fictional conveyor manual is included so the app has sample content immediately.
 
 This is an information-support demo, not a maintenance procedure or a substitute for qualified personnel. Do not use it to operate real equipment.
 
